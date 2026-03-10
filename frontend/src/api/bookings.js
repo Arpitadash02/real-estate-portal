@@ -1,67 +1,17 @@
-// Mock Bookings API using localStorage
+import apiClient from './apiClient';
 
-const BOOKINGS_KEY = 'rp_bookings';
+// POST /api/bookings
+export const createBooking = ({ propertyId }) =>
+  apiClient.post('/bookings', { propertyId }).then(res => res.data);
 
-const getBookings = () =>
-  JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]');
+// GET /api/bookings/customer
+export const getBookingsForCustomer = () =>
+  apiClient.get('/bookings/customer').then(res => res.data);
 
-const saveBookings = (bookings) =>
-  localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings));
+// GET /api/bookings/broker
+export const getBookingsForBroker = () =>
+  apiClient.get('/bookings/broker').then(res => res.data);
 
-export const createBooking = ({ propertyId, propertyTitle, propertyLocation, propertyPrice, customerId, customerName, customerEmail, brokerId }) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const bookings = getBookings();
-      const alreadyBooked = bookings.find(
-        (b) => b.propertyId === propertyId && b.customerId === customerId && b.status !== 'rejected'
-      );
-      if (alreadyBooked) {
-        reject(new Error('You have already booked this property.'));
-        return;
-      }
-      const newBooking = {
-        id: `booking-${Date.now()}`,
-        propertyId,
-        propertyTitle,
-        propertyLocation,
-        propertyPrice,
-        customerId,
-        customerName,
-        customerEmail,
-        brokerId,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
-      };
-      saveBookings([...bookings, newBooking]);
-      resolve(newBooking);
-    }, 400);
-  });
-};
-
-export const getBookingsForCustomer = (customerId) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(getBookings().filter((b) => b.customerId === customerId));
-    }, 300);
-  });
-};
-
-export const getBookingsForBroker = (brokerId) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(getBookings().filter((b) => b.brokerId === brokerId));
-    }, 300);
-  });
-};
-
-export const updateBookingStatus = (bookingId, status) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const updated = getBookings().map((b) =>
-        b.id === bookingId ? { ...b, status } : b
-      );
-      saveBookings(updated);
-      resolve(updated.find((b) => b.id === bookingId));
-    }, 300);
-  });
-};
+// PATCH /api/bookings/{id}/status
+export const updateBookingStatus = (bookingId, status) =>
+  apiClient.patch(`/bookings/${bookingId}/status`, { status }).then(res => res.data);

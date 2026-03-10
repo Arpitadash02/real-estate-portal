@@ -20,12 +20,12 @@ const CustomerDashboard = () => {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getBookingsForCustomer(user.id);
+      const data = await getBookingsForCustomer();
       setBookings(data);
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 

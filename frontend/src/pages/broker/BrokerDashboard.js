@@ -27,12 +27,12 @@ const BrokerDashboard = () => {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getPropertiesByBroker(user.id);
+      const data = await getPropertiesByBroker();
       setProperties(data);
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
@@ -48,14 +48,14 @@ const BrokerDashboard = () => {
     setSubmitting(true);
     try {
       await addProperty({
-        ...form,
+        title,
+        location,
         price: Number(price),
         bedrooms: Number(bedrooms),
         bathrooms: Number(bathrooms),
         area: Number(area),
-        brokerId: user.id,
-        brokerEmail: user.email,
-        image: form.image || `https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80`,
+        description,
+        imageUrl: form.image || `https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80`,
         type,
       });
       showToast(`"${title}" added successfully!`);

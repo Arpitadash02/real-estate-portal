@@ -4,8 +4,8 @@ import './PropertyCard.css';
 const formatPrice = (price) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
 
-const PropertyCard = ({ property, onBook, onDelete, bookingStatus }) => {
-  const { title, location, price, bedrooms, bathrooms, area, description, image, type } = property;
+const PropertyCard = ({ property, onBook, onDelete, bookingStatus, isFavorited, onFavorite }) => {
+  const { title, location, price, bedrooms, bathrooms, area, description, imageUrl, image, type } = property;
 
   const getBookBtnLabel = () => {
     if (!bookingStatus) return 'Book Now';
@@ -20,8 +20,17 @@ const PropertyCard = ({ property, onBook, onDelete, bookingStatus }) => {
   return (
     <div className="property-card card">
       <div className="property-image-wrap">
-        <img src={image} alt={title} className="property-image" />
+        <img src={imageUrl || image} alt={title} className="property-image" />
         <span className="property-type-badge">{type}</span>
+        {onFavorite && (
+          <button
+            className={`fav-btn${isFavorited ? ' fav-active' : ''}`}
+            onClick={(e) => { e.stopPropagation(); onFavorite(property.id); }}
+            title={isFavorited ? 'Remove from favorites' : 'Save to favorites'}
+          >
+            {isFavorited ? '❤️' : '🤍'}
+          </button>
+        )}
       </div>
       <div className="property-body">
         <div className="property-header">

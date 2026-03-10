@@ -27,12 +27,12 @@ const BookingRequestsPage = () => {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getBookingsForBroker(user.id);
+      const data = await getBookingsForBroker();
       setBookings(data);
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
